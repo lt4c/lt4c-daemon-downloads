@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>LT4C Daemon – Tải về & Cài đặt</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #050816;
+      --bg-soft: #0b1020;
+      --accent: #4f46e5;
+      --accent-soft: rgba(79, 70, 229, 0.1);
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --border: #1f2933;
+      --terminal-bg: #020617;
+      --terminal-border: #1e293b;
+      --terminal-header-bg: #020617;
+      --radius-xl: 18px;
+      --radius-lg: 14px;
+      --radius-pill: 999px;
+      --shadow-soft: 0 22px 45px rgba(0, 0, 0, 0.65);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #111827 0, #020617 45%, #000 100%);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 880px;
+      background: linear-gradient(145deg, #020617 0%, #020617 40%, #050816 100%);
+      border-radius: 24px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      padding: 28px 26px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(79, 70, 229, 0.22), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(56, 189, 248, 0.18), transparent 55%);
+      opacity: 0.7;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .page-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: radial-gradient(circle at top left, rgba(94, 234, 212, 0.18), transparent 60%), rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #4ade80;
+      box-shadow: 0 0 10px rgba(74, 222, 128, 0.9);
+    }
+
+    h1 {
+      font-size: clamp(24px, 3vw, 28px);
+      font-weight: 650;
+      letter-spacing: -0.03em;
+      color: #e5e7eb;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--muted);
+      max-width: 420px;
+      line-height: 1.5;
+    }
+
+    .tagline {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: rgba(156, 163, 175, 0.9);
+      margin-bottom: 4px;
+    }
+
+    .highlight-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(79, 70, 229, 0.55);
+      font-size: 11px;
+      color: #e5e7eb;
+      backdrop-filter: blur(18px);
+      box-shadow: 0 0 20px rgba(79, 70, 229, 0.45);
+    }
+
+    .highlight-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #a855f7, #22d3ee);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 22px;
+    }
+
+    .panel {
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.9), #020617 70%);
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      padding: 16px 16px 14px;
+      backdrop-filter: blur(20px);
+    }
+
+    .panel + .panel {
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.85), #020617 70%);
+    }
+
+    .panel-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #e5e7eb;
+      margin-bottom: 4px;
+    }
+
+    .panel-desc {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    /* Terminal window */
+    .terminal {
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--terminal-border);
+      background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.95), #020617 100%);
+      overflow: hidden;
+      font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 13px;
+    }
+
+    .terminal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 10px;
+      background: radial-gradient(circle at top, #020617, #020617 60%, #020617 100%);
+      border-bottom: 1px solid rgba(15, 23, 42, 1);
+    }
+
+    .traffic-lights {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.8);
+    }
+
+    .dot.red {
+      background: #fb5f57;
+    }
+
+    .dot.amber {
+      background: #fdbb2d;
+    }
+
+    .dot.green {
+      background: #28c840;
+    }
+
+    .terminal-title {
+      flex: 1;
+      text-align: center;
+      font-size: 11px;
+      color: #64748b;
+      user-select: none;
+    }
+
+    .terminal-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .copy-btn {
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: radial-gradient(circle at top, rgba(30, 64, 175, 0.9), rgba(15, 23, 42, 0.98));
+      color: #e5e7eb;
+      font-size: 10px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .copy-btn span.icon {
+      font-size: 11px;
+      margin-top: 1px;
+    }
+
+    .terminal-body {
+      padding: 10px 11px 11px;
+      color: #e5e7eb;
+      background: radial-gradient(circle at top left, #020617, #020617 60%, #020617 100%);
+    }
+
+    .line {
+      display: block;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .prompt {
+      color: #4ade80;
+    }
+
+    .cmd {
+      color: #e5e7eb;
+    }
+
+    .comment {
+      color: #6b7280;
+    }
+
+    .section-label {
+      font-size: 11px;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      margin-bottom: 6px;
+    }
+
+    .section-label strong {
+      color: #e5e7eb;
+    }
+
+    ul.info-list {
+      list-style: none;
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    ul.info-list li {
+      display: flex;
+      gap: 6px;
+      align-items: flex-start;
+      margin-bottom: 6px;
+    }
+
+    ul.info-list li::before {
+      content: "•";
+      color: #a5b4fc;
+      font-size: 14px;
+      margin-top: -1px;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .pill {
+      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      color: #e5e7eb;
+      background: radial-gradient(circle at top left, rgba(51, 65, 85, 0.9), rgba(15, 23, 42, 0.95));
+    }
+
+    footer {
+      margin-top: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .footer-link {
+      color: #a5b4fc;
+      text-decoration: none;
+    }
+
+    .footer-link:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        padding: 22px 18px 18px;
+        border-radius: 18px;
+      }
+
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .subtitle {
+        max-width: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="page-inner">
+      <header>
+        <div class="title-block">
+          <div class="badge">
+            <span class="badge-dot"></span>
+            <span>LT4C Daemon Installer</span>
+          </div>
+          <div class="tagline">Trang cài đặt &amp; tải về</div>
+          <h1>Cài đặt LT4C Daemon chỉ với một lệnh</h1>
+          <p class="subtitle">
+            Vui lòng chạy một trong các lệnh bên dưới để cài đặt tự động trên hệ thống của bạn.
+          </p>
+        </div>
+        <div>
+          <div class="highlight-pill">
+            <span class="highlight-dot"></span>
+            <span>Cài đặt nhanh · Không cần tải thủ công</span>
+          </div>
+        </div>
+      </header>
+
+      <section class="grid">
+        <!-- Panel 1: curl -->
+        <section class="panel">
+          <div class="section-label"><strong>Tùy chọn 1</strong> · Dùng <code>curl</code></div>
+          <p class="panel-desc">
+            Khuyến nghị nếu hệ thống của bạn đã có sẵn <code>curl</code>.
+          </p>
+
+          <div class="terminal">
+            <div class="terminal-header">
+              <div class="traffic-lights">
+                <span class="dot red"></span>
+                <span class="dot amber"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="terminal-title">zsh · ssh user@server</div>
+              <div class="terminal-actions">
+                <button class="copy-btn" type="button" data-copy="cmd-curl">
+                  <span class="icon">⧉</span> Copy
+                </button>
+              </div>
+            </div>
+            <div class="terminal-body">
+              <span class="line comment"># Cài đặt LT4C Daemon bằng curl</span>
+              <span class="line">
+                <span class="prompt">$</span>
+                <span class="cmd" id="cmd-curl">
+curl -fsSL https://download.lt4c.io.vn/install.sh | sudo bash
+                </span>
+              </span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Panel 2: wget + info -->
+        <section class="panel">
+          <div class="section-label"><strong>Tùy chọn 2</strong> · Dùng <code>wget</code></div>
+          <p class="panel-desc">
+            Sử dụng nếu máy của bạn không có <code>curl</code> nhưng có <code>wget</code>.
+          </p>
+
+          <div class="terminal" style="margin-bottom: 12px;">
+            <div class="terminal-header">
+              <div class="traffic-lights">
+                <span class="dot red"></span>
+                <span class="dot amber"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="terminal-title">zsh · local terminal</div>
+              <div class="terminal-actions">
+                <button class="copy-btn" type="button" data-copy="cmd-wget">
+                  <span class="icon">⧉</span> Copy
+                </button>
+              </div>
+            </div>
+            <div class="terminal-body">
+              <span class="line comment"># Cài đặt LT4C Daemon bằng wget</span>
+              <span class="line">
+                <span class="prompt">$</span>
+                <span class="cmd" id="cmd-wget">
+wget -qO- https://download.lt4c.io.vn/install.sh | sudo bash
+                </span>
+              </span>
+            </div>
+          </div>
+
+          <p class="panel-desc" style="margin-bottom: 6px;">
+            Lưu ý trước khi cài đặt:
+          </p>
+          <ul class="info-list">
+            <li>Đảm bảo bạn có quyền <code>sudo</code> trên máy.</li>
+            <li>Các lệnh trên dùng HTTPS từ domain <code>download.lt4c.io.vn</code>.</li>
+            <li>Khuyên dùng trên môi trường Linux / macOS (terminal tương thích POSIX).</li>
+          </ul>
+
+          <div class="pill-row">
+            <div class="pill">Tự động phát hiện nền tảng</div>
+            <div class="pill">Thiết lập dịch vụ LT4C Daemon</div>
+            <div class="pill">Có thể gỡ bỏ sau nếu cần</div>
+          </div>
+        </section>
+      </section>
+
+      <footer>
+        <div>© <span id="year"></span> LT4C. Tất cả các quyền được bảo lưu.</div>
+        <div>
+          Script cài đặt: <a class="footer-link" href="https://download.lt4c.io.vn/install.sh" target="_blank" rel="noreferrer">download.lt4c.io.vn/install.sh</a>
+        </div>
+      </footer>
+    </div>
+  </main>
+
+  <script>
+    // Cập nhật năm
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Copy command buttons
+    document.querySelectorAll(".copy-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var targetId = btn.getAttribute("data-copy");
+        var target = document.getElementById(targetId);
+        if (!target) return;
+
+        var text = target.textContent.trim();
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () {
+            var original = btn.innerHTML;
+            btn.innerHTML = '<span class="icon">✓</span> Đã copy';
+            setTimeout(function () {
+              btn.innerHTML = original;
+            }, 1800);
+          });
+        } else {
+          // Fallback
+          var textarea = document.createElement("textarea");
+          textarea.value = text;
+          textarea.style.position = "fixed";
+          textarea.style.opacity = "0";
+          document.body.appendChild(textarea);
+          textarea.select();
+          try {
+            document.execCommand("copy");
+          } catch (e) {}
+          document.body.removeChild(textarea);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
