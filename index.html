@@ -35,8 +35,8 @@
       background: radial-gradient(circle at top, #111827 0, #020617 45%, #000 100%);
       color: var(--text);
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: flex-start;
       padding: 24px;
     }
 
@@ -139,6 +139,7 @@
       color: #e5e7eb;
       backdrop-filter: blur(18px);
       box-shadow: 0 0 20px rgba(79, 70, 229, 0.45);
+      white-space: nowrap;
     }
 
     .highlight-dot {
@@ -150,7 +151,7 @@
 
     .grid {
       display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 22px;
     }
 
@@ -203,6 +204,7 @@
       display: flex;
       gap: 6px;
       align-items: center;
+      flex-shrink: 0;
     }
 
     .dot {
@@ -212,17 +214,9 @@
       box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.8);
     }
 
-    .dot.red {
-      background: #fb5f57;
-    }
-
-    .dot.amber {
-      background: #fdbb2d;
-    }
-
-    .dot.green {
-      background: #28c840;
-    }
+    .dot.red { background: #fb5f57; }
+    .dot.amber { background: #fdbb2d; }
+    .dot.green { background: #28c840; }
 
     .terminal-title {
       flex: 1;
@@ -230,12 +224,17 @@
       font-size: 11px;
       color: #64748b;
       user-select: none;
+      padding: 0 8px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .terminal-actions {
       display: flex;
       align-items: center;
       gap: 8px;
+      flex-shrink: 0;
     }
 
     .copy-btn {
@@ -251,6 +250,7 @@
       gap: 5px;
       letter-spacing: 0.04em;
       text-transform: uppercase;
+      white-space: nowrap;
     }
 
     .copy-btn span.icon {
@@ -262,17 +262,19 @@
       padding: 10px 11px 11px;
       color: #e5e7eb;
       background: radial-gradient(circle at top left, #020617, #020617 60%, #020617 100%);
+      overflow-x: auto;
     }
 
     .line {
       display: block;
       line-height: 1.6;
-      white-space: pre-wrap;
-      word-break: break-all;
+      white-space: pre;
+      min-width: max-content;
     }
 
     .prompt {
       color: #4ade80;
+      margin-right: 4px;
     }
 
     .cmd {
@@ -346,6 +348,7 @@
     .footer-link {
       color: #a5b4fc;
       text-decoration: none;
+      word-break: break-all;
     }
 
     .footer-link:hover {
@@ -353,8 +356,12 @@
     }
 
     @media (max-width: 720px) {
+      body {
+        padding: 16px;
+      }
+
       .page {
-        padding: 22px 18px 18px;
+        padding: 20px 16px 16px;
         border-radius: 18px;
       }
 
@@ -363,12 +370,17 @@
         align-items: flex-start;
       }
 
+      .subtitle {
+        max-width: none;
+      }
+
       .grid {
         grid-template-columns: minmax(0, 1fr);
       }
 
-      .subtitle {
-        max-width: none;
+      .highlight-pill {
+        margin-top: 8px;
+        font-size: 10px;
       }
     }
   </style>
@@ -421,10 +433,7 @@
             <div class="terminal-body">
               <span class="line comment"># Cài đặt LT4C Daemon bằng curl</span>
               <span class="line">
-                <span class="prompt">$</span>
-                <span class="cmd" id="cmd-curl">
-curl -fsSL https://download.lt4c.io.vn/install.sh | sudo bash
-                </span>
+                <span class="prompt">$</span><span class="cmd" id="cmd-curl">curl -fsSL https://download.lt4c.io.vn/install.sh | sudo bash</span>
               </span>
             </div>
           </div>
@@ -454,10 +463,7 @@ curl -fsSL https://download.lt4c.io.vn/install.sh | sudo bash
             <div class="terminal-body">
               <span class="line comment"># Cài đặt LT4C Daemon bằng wget</span>
               <span class="line">
-                <span class="prompt">$</span>
-                <span class="cmd" id="cmd-wget">
-wget -qO- https://download.lt4c.io.vn/install.sh | sudo bash
-                </span>
+                <span class="prompt">$</span><span class="cmd" id="cmd-wget">wget -qO- https://download.lt4c.io.vn/install.sh | sudo bash</span>
               </span>
             </div>
           </div>
@@ -510,7 +516,6 @@ wget -qO- https://download.lt4c.io.vn/install.sh | sudo bash
             }, 1800);
           });
         } else {
-          // Fallback
           var textarea = document.createElement("textarea");
           textarea.value = text;
           textarea.style.position = "fixed";
