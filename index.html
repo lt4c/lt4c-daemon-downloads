@@ -1,528 +1,268 @@
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-  <meta charset="UTF-8" />
-  <title>LT4C Daemon – Tải về & Cài đặt</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    :root {
-      --bg: #050816;
-      --bg-soft: #0b1020;
-      --accent: #4f46e5;
-      --accent-soft: rgba(79, 70, 229, 0.1);
-      --text: #f9fafb;
-      --muted: #9ca3af;
-      --border: #1f2933;
-      --terminal-bg: #020617;
-      --terminal-border: #1e293b;
-      --terminal-header-bg: #020617;
-      --radius-xl: 18px;
-      --radius-lg: 14px;
-      --radius-pill: 999px;
-      --shadow-soft: 0 22px 45px rgba(0, 0, 0, 0.65);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      min-height: 100vh;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-        "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #111827 0, #020617 45%, #000 100%);
-      color: var(--text);
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 24px;
-    }
-
-    .page {
-      width: 100%;
-      max-width: 880px;
-      background: linear-gradient(145deg, #020617 0%, #020617 40%, #050816 100%);
-      border-radius: 24px;
-      box-shadow: var(--shadow-soft);
-      border: 1px solid rgba(148, 163, 184, 0.15);
-      padding: 28px 26px 24px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .page::before {
-      content: "";
-      position: absolute;
-      inset: -40%;
-      background:
-        radial-gradient(circle at 0% 0%, rgba(79, 70, 229, 0.22), transparent 55%),
-        radial-gradient(circle at 100% 100%, rgba(56, 189, 248, 0.18), transparent 55%);
-      opacity: 0.7;
-      mix-blend-mode: screen;
-      pointer-events: none;
-    }
-
-    .page-inner {
-      position: relative;
-      z-index: 1;
-    }
-
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .title-block {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 4px 10px;
-      border-radius: var(--radius-pill);
-      background: radial-gradient(circle at top left, rgba(94, 234, 212, 0.18), transparent 60%), rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.25);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--muted);
-    }
-
-    .badge-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #4ade80;
-      box-shadow: 0 0 10px rgba(74, 222, 128, 0.9);
-    }
-
-    h1 {
-      font-size: clamp(24px, 3vw, 28px);
-      font-weight: 650;
-      letter-spacing: -0.03em;
-      color: #e5e7eb;
-    }
-
-    .subtitle {
-      font-size: 14px;
-      color: var(--muted);
-      max-width: 420px;
-      line-height: 1.5;
-    }
-
-    .tagline {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      color: rgba(156, 163, 175, 0.9);
-      margin-bottom: 4px;
-    }
-
-    .highlight-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 12px;
-      border-radius: var(--radius-pill);
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(79, 70, 229, 0.55);
-      font-size: 11px;
-      color: #e5e7eb;
-      backdrop-filter: blur(18px);
-      box-shadow: 0 0 20px rgba(79, 70, 229, 0.45);
-      white-space: nowrap;
-    }
-
-    .highlight-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 999px;
-      background: linear-gradient(135deg, #a855f7, #22d3ee);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 22px;
-    }
-
-    .panel {
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.9), #020617 70%);
-      border-radius: var(--radius-xl);
-      border: 1px solid rgba(148, 163, 184, 0.25);
-      padding: 16px 16px 14px;
-      backdrop-filter: blur(20px);
-    }
-
-    .panel + .panel {
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.85), #020617 70%);
-    }
-
-    .panel-title {
-      font-size: 13px;
-      font-weight: 600;
-      color: #e5e7eb;
-      margin-bottom: 4px;
-    }
-
-    .panel-desc {
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 12px;
-      line-height: 1.5;
-    }
-
-    /* Terminal window */
-    .terminal {
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--terminal-border);
-      background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.95), #020617 100%);
-      overflow: hidden;
-      font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size: 13px;
-    }
-
-    .terminal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 7px 10px;
-      background: radial-gradient(circle at top, #020617, #020617 60%, #020617 100%);
-      border-bottom: 1px solid rgba(15, 23, 42, 1);
-    }
-
-    .traffic-lights {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-      flex-shrink: 0;
-    }
-
-    .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.8);
-    }
-
-    .dot.red { background: #fb5f57; }
-    .dot.amber { background: #fdbb2d; }
-    .dot.green { background: #28c840; }
-
-    .terminal-title {
-      flex: 1;
-      text-align: center;
-      font-size: 11px;
-      color: #64748b;
-      user-select: none;
-      padding: 0 8px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .terminal-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-shrink: 0;
-    }
-
-    .copy-btn {
-      border: 1px solid rgba(148, 163, 184, 0.6);
-      background: radial-gradient(circle at top, rgba(30, 64, 175, 0.9), rgba(15, 23, 42, 0.98));
-      color: #e5e7eb;
-      font-size: 10px;
-      padding: 4px 8px;
-      border-radius: 999px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .copy-btn span.icon {
-      font-size: 11px;
-      margin-top: 1px;
-    }
-
-    .terminal-body {
-      padding: 10px 11px 11px;
-      color: #e5e7eb;
-      background: radial-gradient(circle at top left, #020617, #020617 60%, #020617 100%);
-      overflow-x: auto;
-    }
-
-    .line {
-      display: block;
-      line-height: 1.6;
-      white-space: pre;
-      min-width: max-content;
-    }
-
-    .prompt {
-      color: #4ade80;
-      margin-right: 4px;
-    }
-
-    .cmd {
-      color: #e5e7eb;
-    }
-
-    .comment {
-      color: #6b7280;
-    }
-
-    .section-label {
-      font-size: 11px;
-      color: #9ca3af;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      margin-bottom: 6px;
-    }
-
-    .section-label strong {
-      color: #e5e7eb;
-    }
-
-    ul.info-list {
-      list-style: none;
-      margin-top: 6px;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    ul.info-list li {
-      display: flex;
-      gap: 6px;
-      align-items: flex-start;
-      margin-bottom: 6px;
-    }
-
-    ul.info-list li::before {
-      content: "•";
-      color: #a5b4fc;
-      font-size: 14px;
-      margin-top: -1px;
-    }
-
-    .pill-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 10px;
-    }
-
-    .pill {
-      font-size: 11px;
-      padding: 4px 9px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      color: #e5e7eb;
-      background: radial-gradient(circle at top left, rgba(51, 65, 85, 0.9), rgba(15, 23, 42, 0.95));
-    }
-
-    footer {
-      margin-top: 18px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 8px;
-      align-items: center;
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    .footer-link {
-      color: #a5b4fc;
-      text-decoration: none;
-      word-break: break-all;
-    }
-
-    .footer-link:hover {
-      text-decoration: underline;
-    }
-
-    @media (max-width: 720px) {
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LT4C Daemon Downloads</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #0f172a;
+        --fg: #e2e8f0;
+        --card: rgba(255, 255, 255, 0.05);
+        --accent: #22d3ee;
+        font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      }
       body {
-        padding: 16px;
-      }
-
-      .page {
-        padding: 20px 16px 16px;
-        border-radius: 18px;
-      }
-
-      header {
-        flex-direction: column;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        background: radial-gradient(circle at top, rgba(34, 211, 238, 0.15), transparent),
+          radial-gradient(circle at 20% 20%, rgba(236, 72, 153, 0.15), transparent),
+          var(--bg);
+        color: var(--fg);
+        display: flex;
+        justify-content: center;
         align-items: flex-start;
       }
-
-      .subtitle {
-        max-width: none;
+      main {
+        width: min(1100px, 95vw);
+        margin: 2.5rem auto;
+        padding: 2rem;
+        background: rgba(15, 23, 42, 0.8);
+        border-radius: 1.5rem;
+        box-shadow: 0 20px 70px rgba(15, 23, 42, 0.5);
+        backdrop-filter: blur(12px);
       }
-
+      header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      h1 {
+        margin: 0;
+        font-size: clamp(2rem, 4vw, 3rem);
+      }
+      .tagline {
+        margin-top: 0.75rem;
+        color: #cbd5f5;
+      }
+      .card {
+        background: var(--card);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .card h2 {
+        margin-top: 0;
+        margin-bottom: 0.6rem;
+        font-size: 1.4rem;
+      }
       .grid {
-        grid-template-columns: minmax(0, 1fr);
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1rem;
       }
-
-      .highlight-pill {
-        margin-top: 8px;
-        font-size: 10px;
+      .stat {
+        padding: 1rem;
+        background: rgba(15, 23, 42, 0.6);
+        border-radius: 0.75rem;
+        border: 1px solid rgba(255, 255, 255, 0.05);
       }
-    }
-  </style>
-</head>
-<body>
-  <main class="page">
-    <div class="page-inner">
+      .stat-label {
+        font-size: 0.85rem;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+      .stat-value {
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+      .cmds {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1rem;
+      }
+      pre {
+        background: rgba(15, 23, 42, 0.7);
+        padding: 1rem;
+        border-radius: 0.75rem;
+        overflow-x: auto;
+        margin: 0.5rem 0 0;
+        font-size: 0.9rem;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 0.85rem 0.75rem;
+      }
+      th {
+        font-size: 0.85rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: #94a3b8;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      tr + tr td {
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      a {
+        color: var(--accent);
+      }
+      .status {
+        margin-top: 0.5rem;
+        color: #cbd5f5;
+      }
+      .error {
+        color: #f87171;
+      }
+      footer {
+        margin-top: 2rem;
+        text-align: center;
+        font-size: 0.9rem;
+        color: #94a3b8;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
       <header>
-        <div class="title-block">
-          <div class="badge">
-            <span class="badge-dot"></span>
-            <span>LT4C Daemon Installer</span>
-          </div>
-          <div class="tagline">Trang cài đặt &amp; tải về</div>
-          <h1>Cài đặt LT4C Daemon chỉ với một lệnh</h1>
-          <p class="subtitle">
-            Vui lòng chạy một trong các lệnh bên dưới để cài đặt tự động trên hệ thống của bạn.
-          </p>
-        </div>
-        <div>
-          <div class="highlight-pill">
-            <span class="highlight-dot"></span>
-            <span>Cài đặt nhanh · Không cần tải thủ công</span>
-          </div>
-        </div>
+        <h1>LT4C Daemon Downloads</h1>
+        <p class="tagline">Tải nhanh, cập nhật tự động từ download.lt4c.io.vn</p>
       </header>
 
-      <section class="grid">
-        <!-- Panel 1: curl -->
-        <section class="panel">
-          <div class="section-label"><strong>Tùy chọn 1</strong> · Dùng <code>curl</code></div>
-          <p class="panel-desc">
-            Khuyến nghị nếu hệ thống của bạn đã có sẵn <code>curl</code>.
-          </p>
-
-          <div class="terminal">
-            <div class="terminal-header">
-              <div class="traffic-lights">
-                <span class="dot red"></span>
-                <span class="dot amber"></span>
-                <span class="dot green"></span>
-              </div>
-              <div class="terminal-title">zsh · ssh lt4c@datacenter</div>
-              <div class="terminal-actions">
-                <button class="copy-btn" type="button" data-copy="cmd-curl">
-                  <span class="icon">⧉</span> Copy
-                </button>
-              </div>
-            </div>
-            <div class="terminal-body">
-              <span class="line"><span class="prompt">$</span><span class="cmd" id="cmd-curl">curl -fsSL https://download.lt4c.io.vn/install.sh | sudo bash</span></span>
-            </div>
+      <section class="card" id="meta-card">
+        <h2>Thông tin phiên bản</h2>
+        <div class="grid">
+          <div class="stat">
+            <div class="stat-label">Phiên bản</div>
+            <div class="stat-value" id="version">Đang tải…</div>
           </div>
-        </section>
-
-        <!-- Panel 2: wget + info -->
-        <section class="panel">
-          <div class="section-label"><strong>Tùy chọn 2</strong> · Dùng <code>wget</code></div>
-          <p class="panel-desc">
-            Sử dụng nếu máy của bạn không có <code>curl</code> nhưng có <code>wget</code>.
-          </p>
-
-          <div class="terminal" style="margin-bottom: 12px;">
-            <div class="terminal-header">
-              <div class="traffic-lights">
-                <span class="dot red"></span>
-                <span class="dot amber"></span>
-                <span class="dot green"></span>
-              </div>
-              <div class="terminal-title">zsh · local terminal</div>
-              <div class="terminal-actions">
-                <button class="copy-btn" type="button" data-copy="cmd-wget">
-                  <span class="icon">⧉</span> Copy
-                </button>
-              </div>
-            </div>
-            <div class="terminal-body">
-              <span class="line"><span class="prompt">$</span><span class="cmd" id="cmd-wget">wget -qO- https://download.lt4c.io.vn/install.sh | sudo bash</span></span>
-            </div>
+          <div class="stat">
+            <div class="stat-label">Phát hành</div>
+            <div class="stat-value" id="published">—</div>
           </div>
-
-          <p class="panel-desc" style="margin-bottom: 6px;">
-            Lưu ý trước khi cài đặt:
-          </p>
-          <ul class="info-list">
-            <li>Đảm bảo bạn có quyền <code>sudo</code> trên máy.</li>
-            <li>Các lệnh trên dùng HTTPS từ domain <code>download.lt4c.io.vn</code>.</li>
-            <li>Khuyên dùng trên môi trường Linux / macOS (terminal tương thích POSIX).</li>
-          </ul>
-
-          <div class="pill-row">
-            <div class="pill">Tự động phát hiện nền tảng</div>
-            <div class="pill">Thiết lập dịch vụ LT4C Daemon</div>
-            <div class="pill">Có thể gỡ bỏ sau nếu cần</div>
+          <div class="stat">
+            <div class="stat-label">Ghi chú</div>
+            <div class="stat-value" id="notes" style="font-size: 1rem">—</div>
           </div>
-        </section>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Cài đặt nhanh (Linux)</h2>
+        <p>Tải script từ download.lt4c.io.vn/install.sh và chạy trực tiếp:</p>
+        <div class="cmds">
+          <div>
+            <strong>cURL</strong>
+            <pre><code id="curl-cmd">curl -fsSL -o /tmp/install_lt4c.sh https://download.lt4c.io.vn/install.sh && sudo bash /tmp/install_lt4c.sh</code></pre>
+          </div>
+          <div>
+            <strong>wget</strong>
+            <pre><code id="wget-cmd">wget -qO /tmp/install_lt4c.sh https://download.lt4c.io.vn/install.sh && sudo bash /tmp/install_lt4c.sh</code></pre>
+          </div>
+        </div>
+        <p class="status" id="install-status"></p>
+      </section>
+
+      <section class="card">
+        <h2>Gói tải về</h2>
+        <div id="table-wrapper">
+          <p>Đang tải metadata…</p>
+        </div>
       </section>
 
       <footer>
-        <div>© <span id="year"></span> LT4C. Tất cả các quyền được bảo lưu.</div>
-        <div>
-          Script cài đặt: <a class="footer-link" href="https://download.lt4c.io.vn/install.sh" target="_blank" rel="noreferrer">download.lt4c.io.vn/install.sh</a>
-        </div>
+        Dữ liệu cập nhật tự động từ <a href="https://download.lt4c.io.vn/latest.json">latest.json</a>.
       </footer>
-    </div>
-  </main>
+    </main>
 
-  <script>
-    // Cập nhật năm
-    document.getElementById("year").textContent = new Date().getFullYear();
+    <script>
+      const METADATA_URL = "https://download.lt4c.io.vn/latest.json";
 
-    // Copy command buttons
-    document.querySelectorAll(".copy-btn").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        var targetId = btn.getAttribute("data-copy");
-        var target = document.getElementById(targetId);
-        if (!target) return;
+      const fmtDate = (value) => {
+        if (!value) return "Không rõ";
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return value;
+        return date.toLocaleString("vi-VN", { timeZone: "UTC" }) + " UTC";
+      };
 
-        var text = target.textContent.trim();
-
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(text).then(function () {
-            var original = btn.innerHTML;
-            btn.innerHTML = '<span class="icon">✓</span> Đã copy';
-            setTimeout(function () {
-              btn.innerHTML = original;
-            }, 1800);
-          });
-        } else {
-          var textarea = document.createElement("textarea");
-          textarea.value = text;
-          textarea.style.position = "fixed";
-          textarea.style.opacity = "0";
-          document.body.appendChild(textarea);
-          textarea.select();
-          try {
-            document.execCommand("copy");
-          } catch (e) {}
-          document.body.removeChild(textarea);
+      const fmtSize = (bytes) => {
+        if (typeof bytes !== "number" || Number.isNaN(bytes)) return "—";
+        const units = ["B", "KB", "MB", "GB"];
+        let idx = 0;
+        let size = bytes;
+        while (size >= 1024 && idx < units.length - 1) {
+          size /= 1024;
+          idx += 1;
         }
-      });
-    });
-  </script>
-</body>
+        return `${size.toFixed(idx === 0 ? 0 : 1)} ${units[idx]}`;
+      };
+
+      async function loadMetadata() {
+        const wrapper = document.getElementById("table-wrapper");
+        const status = document.getElementById("install-status");
+        try {
+          const response = await fetch(METADATA_URL, { cache: "no-cache" });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const data = await response.json();
+
+          document.getElementById("version").textContent = data.version || "Không rõ";
+          document.getElementById("published").textContent = fmtDate(data.published_at);
+          document.getElementById("notes").textContent = data.notes || "—";
+          status.textContent = `Cập nhật lần cuối: ${fmtDate(data.published_at)}`;
+
+          if (!Array.isArray(data.artifacts) || data.artifacts.length === 0) {
+            wrapper.innerHTML = "<p class='error'>Không có gói tải về khả dụng.</p>";
+            return;
+          }
+
+          const rows = data.artifacts
+            .sort((a, b) => a.platform.localeCompare(b.platform))
+            .map((artifact) => {
+              const sha = artifact.sha256 ? artifact.sha256.slice(0, 12) + "…" : "—";
+              return `
+                <tr>
+                  <td>${artifact.platform}</td>
+                  <td>${artifact.arch}</td>
+                  <td><a href="${artifact.url}" download>${artifact.file}</a></td>
+                  <td>${fmtSize(Number(artifact.size))}</td>
+                  <td><code>${sha}</code></td>
+                </tr>
+              `;
+            })
+            .join("");
+
+          wrapper.innerHTML = `
+            <table>
+              <thead>
+                <tr>
+                  <th>Nền tảng</th>
+                  <th>Kiến trúc</th>
+                  <th>File</th>
+                  <th>Kích thước</th>
+                  <th>SHA256</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+          `;
+        } catch (error) {
+          console.error(error);
+          wrapper.innerHTML =
+            "<p class='error'>Không thể tải metadata. Vui lòng thử lại sau hoặc kiểm tra latest.json.</p>";
+          status.textContent = error.message;
+        }
+      }
+
+      loadMetadata();
+    </script>
+  </body>
 </html>
