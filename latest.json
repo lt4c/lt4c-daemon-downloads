@@ -1,6 +1,61 @@
 {
-  "version": "v1.0.1",
-  "url": "https://download.lt4c.io.vn/lt4c-daemon-v1.0.1-linux-amd64",
-  "notes": "Auto release from CI",
-  "published_at": "2025-11-11T16:59:43Z"
+  "version": "v1.0.5",
+  "notes": "Automated release from CI",
+  "published_at": "2025-11-12T15:00:26Z",
+  "artifacts": [
+  {
+    "os": "linux",
+    "arch": "amd64",
+    "platform": "Linux amd64",
+    "file": "lt4c-daemon-v1.0.5-linux-amd64",
+    "url": "https://download.lt4c.io.vn/lt4c-daemon-v1.0.5-linux-amd64",
+    "sha256": "12d333bcb650a16236a43e5671b1a0aabb9597920336e3c9949e9b51721811b0",
+    "size": 14201872,
+    "version": "v1.0.5"
+  },
+  {
+    "os": "macos",
+    "arch": "amd64",
+    "platform": "macOS amd64",
+    "file": "lt4c-daemon-v1.0.5-macos-amd64",
+    "url": "https://download.lt4c.io.vn/lt4c-daemon-v1.0.5-macos-amd64",
+    "sha256": "b3da1e56b0553e0a50155ad98985d3ea0042c0b570df8f764a555abe6efea3a6",
+    "size": 12566412,
+    "version": "v1.0.5"
+  },
+  {
+    "os": "macos",
+    "arch": "arm64",
+    "platform": "macOS arm64",
+    "file": "lt4c-daemon-v1.0.5-macos-arm64",
+    "url": "https://download.lt4c.io.vn/lt4c-daemon-v1.0.5-macos-arm64",
+    "sha256": "22881f4da2f55c394a769f37af31314610b64c71438732489cff31ff89654a4e",
+    "size": 11828992,
+    "version": "v1.0.5"
+  },
+  {
+    "os": "windows",
+    "arch": "amd64",
+    "platform": "Windows 64-bit",
+    "file": "lt4c-daemon-v1.0.5-windows-amd64.exe",
+    "url": "https://download.lt4c.io.vn/lt4c-daemon-v1.0.5-windows-amd64.exe",
+    "sha256": "de7bfd15f323843a0cce68792e17cc58f91ca350eb969abbec394e9108bece85",
+    "size": 11278848,
+    "version": "v1.0.5"
+  },
+  {
+    "os": "windows",
+    "arch": "x86",
+    "platform": "Windows 32-bit",
+    "file": "lt4c-daemon-v1.0.5-windows-x86.exe",
+    "url": "https://download.lt4c.io.vn/lt4c-daemon-v1.0.5-windows-x86.exe",
+    "sha256": "7eb727b63965f584eb4038b968ff4d83aa502510667bdb3cccc9330a83f9eab9",
+    "size": 8809472,
+    "version": "v1.0.5"
+  }
+],
+  "install": {
+    "curl": "curl -fsSL -o /tmp/install_lt4c.sh https://download.lt4c.io.vn/install.sh && sudo bash /tmp/install_lt4c.sh",
+    "wget": "wget -qO /tmp/install_lt4c.sh https://download.lt4c.io.vn/install.sh && sudo bash /tmp/install_lt4c.sh"
+  }
 }
