@@ -1,57 +1,67 @@
 {
-  "version": "v1.0.8",
+  "version": "v1.0.9",
   "notes": "Automated release from CI",
-  "published_at": "2025-11-12T16:10:07Z",
+  "published_at": "2025-11-13T04:29:10Z",
   "artifacts": [
   {
     "os": "linux",
     "arch": "amd64",
     "platform": "Linux amd64",
-    "file": "lt4c-daemon-v1.0.8-linux-amd64",
-    "url": "https://download.lt4c.io.vn/lt4c-daemon-v1.0.8-linux-amd64",
-    "sha256": "218ad7bdc2f157926d32d8aeb8bf108251f480b512203cb46ba1721f4b4907ae",
+    "file": "lt4c-daemon-v1.0.9-linux-amd64",
+    "url": "https://download.lt4c.io.vn/lt4c-daemon-v1.0.9-linux-amd64",
+    "sha256": "10e4f2b1613faf6e920f1056436b98380e89448ef642b8599ee8487f4340234f",
     "size": 14315768,
-    "version": "v1.0.8"
+    "version": "v1.0.9"
+  },
+  {
+    "os": "linux",
+    "arch": "arm64",
+    "platform": "Linux arm64",
+    "file": "lt4c-daemon-v1.0.9-linux-arm64",
+    "url": "https://download.lt4c.io.vn/lt4c-daemon-v1.0.9-linux-arm64",
+    "sha256": "65964c405bab2228a56cddd23232c9339cc5af41e533be34cc2a9d5f837c10b4",
+    "size": 13711280,
+    "version": "v1.0.9"
   },
   {
     "os": "macos",
     "arch": "amd64",
     "platform": "macOS amd64",
-    "file": "lt4c-daemon-v1.0.8-macos-amd64",
-    "url": "https://download.lt4c.io.vn/lt4c-daemon-v1.0.8-macos-amd64",
-    "sha256": "8147369cb988bf49bacf98e6066629619302a566aa7c591c80616d7ac8739e02",
-    "size": 12697220,
-    "version": "v1.0.8"
+    "file": "lt4c-daemon-v1.0.9-macos-amd64",
+    "url": "https://download.lt4c.io.vn/lt4c-daemon-v1.0.9-macos-amd64",
+    "sha256": "163b95f52353342a1fb46181c1e44499f745b8b75983e409b78cc084a9b7cdd1",
+    "size": 12696908,
+    "version": "v1.0.9"
   },
   {
     "os": "macos",
     "arch": "arm64",
     "platform": "macOS arm64",
-    "file": "lt4c-daemon-v1.0.8-macos-arm64",
-    "url": "https://download.lt4c.io.vn/lt4c-daemon-v1.0.8-macos-arm64",
-    "sha256": "f8b445a66ef6fe5cc7a059905736e9d57b05718c733a563ef0b4177bb8fb6a25",
+    "file": "lt4c-daemon-v1.0.9-macos-arm64",
+    "url": "https://download.lt4c.io.vn/lt4c-daemon-v1.0.9-macos-arm64",
+    "sha256": "e7c5d79a214a98f1244ba91f4b7b7ae877457cf7c3b44340ddc1f376671b21ac",
     "size": 11968816,
-    "version": "v1.0.8"
+    "version": "v1.0.9"
   },
   {
     "os": "windows",
     "arch": "amd64",
     "platform": "Windows 64-bit",
-    "file": "lt4c-daemon-v1.0.8-windows-amd64.exe",
-    "url": "https://download.lt4c.io.vn/lt4c-daemon-v1.0.8-windows-amd64.exe",
-    "sha256": "860a72b0e51aca298260ca5ef85085a554ebcb01ce1aa668f8b93001b13c4f32",
+    "file": "lt4c-daemon-v1.0.9-windows-amd64.exe",
+    "url": "https://download.lt4c.io.vn/lt4c-daemon-v1.0.9-windows-amd64.exe",
+    "sha256": "1d3820c853456a7a178be801d516c83cc49cdf587655bcec9bdb968948dcb776",
     "size": 11419136,
-    "version": "v1.0.8"
+    "version": "v1.0.9"
   },
   {
     "os": "windows",
     "arch": "x86",
     "platform": "Windows 32-bit",
-    "file": "lt4c-daemon-v1.0.8-windows-x86.exe",
-    "url": "https://download.lt4c.io.vn/lt4c-daemon-v1.0.8-windows-x86.exe",
-    "sha256": "84f9db7c5f11d9232d66d83623476bad9601432e61a4a149ed7cdfe546b7fff2",
+    "file": "lt4c-daemon-v1.0.9-windows-x86.exe",
+    "url": "https://download.lt4c.io.vn/lt4c-daemon-v1.0.9-windows-x86.exe",
+    "sha256": "306bc7f332a9352d67f62d68af2a8790f3dcf5295167db9dca3d40de46ab3a9c",
     "size": 8902144,
-    "version": "v1.0.8"
+    "version": "v1.0.9"
   }
 ],
   "install": {
