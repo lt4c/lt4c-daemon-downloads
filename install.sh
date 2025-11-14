@@ -21,6 +21,8 @@ Environment=LT4C_HTTP_ADDR=0.0.0.0:8080
 Environment=LT4C_DB_PATH=/var/lib/lt4c-daemon/state.db
 Environment=LT4C_TOKEN_PATH=/var/lib/lt4c-daemon/token
 Environment=LT4C_TRAEFIK_CONFIG_DIR=/etc/lt4c-traefik
+Environment=LT4C_BOXES_ROOT=/boxes/home
+Environment=LT4C_BOX_MOUNT_PATH=/home
 Environment=LT4C_DOCKER_HOST=unix:///var/run/docker.sock
 Environment=LT4C_RECONCILE_SECONDS=30
 ExecStart=/usr/local/bin/lt4c-daemon-lastest daemon
@@ -58,7 +60,7 @@ create_user_and_dirs() {
   if ! id -u lt4c >/dev/null 2>&1; then
     useradd --system --home "${STATE_DIR}" --shell /usr/sbin/nologin lt4c
   fi
-  install -d -o lt4c -g lt4c "${STATE_DIR}" "${TRAEFIK_DIR}"
+  install -d -o lt4c -g lt4c "${STATE_DIR}" "${TRAEFIK_DIR}" /boxes/home
 }
 
 download_binary() {
