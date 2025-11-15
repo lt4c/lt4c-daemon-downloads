@@ -69,21 +69,31 @@ download_binary() {
   local latest_json
   latest_json="$(curl -fsSL "${METADATA_URL}")"
 
-  local download_url version
-  download_url="$(printf '%s' "${latest_json}" | jq -r '.url')"
+  local version download_url
   version="$(printf '%s' "${latest_json}" | jq -r '.version')"
 
-  [[ -n "${download_url}" ]] || { echo "Missing download URL in metadata."; exit 1; }
+  download_url="$(printf '%s' "${latest_json}" | jq -r '
+      .artifacts[]
+      | select(.os=="linux" and .arch=="amd64")
+      | .url
+    ')"
 
+  if [[ -z "${download_url}" || "${download_url}" == "null" ]]; then
+    echo "ERROR: Could not find Linux amd64 binary in metadata!" >&2
+    exit 1
+  fi
+
+  echo "Downloading ${version} from ${download_url}..."
   local tmp
   tmp="$(mktemp -p /tmp lt4c-download.XXXXXX)"
-  echo "Downloading ${version} from ${download_url}..."
+
   curl -fsSL "${download_url}" -o "${tmp}"
 
   install -m 0755 "${tmp}" "${BINARY_PATH}"
   ln -sf "${BINARY_PATH}" /usr/local/bin/lt4c-daemon
   rm -f "${tmp}"
 }
+
 
 install_service() {
   printf '%s\n' "${SERVICE_UNIT_CONTENT}" > "${SERVICE_FILE}"
