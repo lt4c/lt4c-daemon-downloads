@@ -2,13 +2,13 @@
 set -euo pipefail
 
 METADATA_URL="${METADATA_URL:-https://download.lt4c.io.vn/latest.json}"
-BINARY_PATH="/usr/local/bin/lt4c-daemon-lastest"
+BINARY_PATH="/usr/local/bin/lt4c-daemon-latest"
 SERVICE_NAME="lt4c-daemon"
 SERVICE_FILE="/etc/systemd/system/${SERVICE_NAME}.service"
 STATE_DIR="/var/lib/lt4c-daemon"
 TRAEFIK_DIR="/etc/lt4c-traefik"
 
-read -r -d '' SERVICE_UNIT_CONTENT <<'EOF'
+SERVICE_UNIT_CONTENT="$(cat <<'EOF'
 [Unit]
 Description=LT4C container manager daemon
 After=network-online.target docker.service
@@ -25,7 +25,7 @@ Environment=LT4C_BOXES_ROOT=/boxes/home
 Environment=LT4C_BOX_MOUNT_PATH=/home
 Environment=LT4C_DOCKER_HOST=unix:///var/run/docker.sock
 Environment=LT4C_RECONCILE_SECONDS=30
-ExecStart=/usr/local/bin/lt4c-daemon-lastest daemon
+ExecStart=/usr/local/bin/lt4c-daemon-latest daemon
 Restart=always
 RestartSec=5
 WorkingDirectory=/var/lib/lt4c-daemon
@@ -34,6 +34,7 @@ LimitNOFILE=65535
 [Install]
 WantedBy=multi-user.target
 EOF
+)"
 
 require_root() {
   if [[ $EUID -ne 0 ]]; then
@@ -67,15 +68,18 @@ download_binary() {
   echo "Fetching metadata from ${METADATA_URL}..."
   local latest_json
   latest_json="$(curl -fsSL "${METADATA_URL}")"
+
   local download_url version
   download_url="$(printf '%s' "${latest_json}" | jq -r '.url')"
   version="$(printf '%s' "${latest_json}" | jq -r '.version')"
+
   [[ -n "${download_url}" ]] || { echo "Missing download URL in metadata."; exit 1; }
 
   local tmp
   tmp="$(mktemp -p /tmp lt4c-download.XXXXXX)"
   echo "Downloading ${version} from ${download_url}..."
   curl -fsSL "${download_url}" -o "${tmp}"
+
   install -m 0755 "${tmp}" "${BINARY_PATH}"
   ln -sf "${BINARY_PATH}" /usr/local/bin/lt4c-daemon
   rm -f "${tmp}"
